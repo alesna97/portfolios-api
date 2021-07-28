@@ -1,56 +1,54 @@
 
 class Api::V1::TechnologiesController < ApplicationController
-  before_action :set_api_v1_technology, only: [:show, :update, :destroy]
-  # before_action -> { doorkeeper_authorize! :read }, only: :index
-  # before_action only: [:create, :update, :destroy] do
-  #   doorkeeper_authorize! :write
-  # end
-
+  before_action :doorkeeper_authorize!, only: [:create, :update, :destroy]
+  before_action :set_technology, only: [:show, :update, :destroy]
+  
   # GET /api/v1/technologies
   def index
-    @api_v1_technologies = Technology.all
+    search = Technology.ransack(params[:q]).result
+    technologies = search.page(params[:page]).per(params[:per_page])
 
-    render json: @api_v1_technologies
+    render json: { data: technologies,  pagination: json_serial(technologies)}
   end
 
   # GET /api/v1/technologies/1
   def show
-    render json: @api_v1_technology
+    render json: @technology
   end
 
   # POST /api/v1/technologies
   def create
-    @api_v1_technology = Technology.new(api_v1_technology_params)
+    @technology = Technology.new(technology_params)
 
-    if @api_v1_technology.save
-      render json: @api_v1_technology, status: :created, location: @api_v1_technology
+    if @technology.save
+      render json: @technology, status: :created
     else
-      render json: @api_v1_technology.errors, status: :unprocessable_entity
+      render json: @technology.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /api/v1/technologies/1
   def update
-    if @api_v1_technology.update(api_v1_technology_params)
-      render json: @api_v1_technology
+    if @technology.update(technology_params)
+      render json: @technology
     else
-      render json: @api_v1_technology.errors, status: :unprocessable_entity
+      render json: @technology.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /api/v1/technologies/1
   def destroy
-    @api_v1_technology.destroy
+    @technology.destroy
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_api_v1_technology
-      @api_v1_technology = Technology.find(params[:id])
+    def set_technology
+      @technology = Technology.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
-    def api_v1_technology_params
+    def technology_params
       params.permit(:name, :image)
     end
 end
