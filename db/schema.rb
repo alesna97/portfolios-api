@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_25_105924) do
+ActiveRecord::Schema.define(version: 2021_07_28_142147) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "applications", force: :cascade do |t|
+    t.text "description"
+    t.string "image"
+    t.string "url"
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "project_id", null: false
+    t.index ["project_id"], name: "index_applications_on_project_id"
+  end
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
@@ -57,6 +68,22 @@ ActiveRecord::Schema.define(version: 2021_07_25_105924) do
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
+  create_table "projects", force: :cascade do |t|
+    t.text "description"
+    t.string "image"
+    t.string "url"
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "projects_technologies", id: false, force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.bigint "technology_id", null: false
+    t.index ["project_id"], name: "index_projects_technologies_on_project_id"
+    t.index ["technology_id"], name: "index_projects_technologies_on_technology_id"
+  end
+
   create_table "technologies", force: :cascade do |t|
     t.string "name"
     t.string "image"
@@ -76,6 +103,7 @@ ActiveRecord::Schema.define(version: 2021_07_25_105924) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "applications", "projects"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
 end

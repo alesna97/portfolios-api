@@ -46,6 +46,9 @@ end
 gem 'dotenv-rails', '2.7.6'
 gem 'doorkeeper', '5.5.2'
 gem 'devise', '4.8.0'
+gem 'active_model_serializers', '~> 0.10.0'
 gem 'mini_magick'
 gem 'carrierwave-aws'
+gem 'kaminari'
+gem 'ransack'
 
