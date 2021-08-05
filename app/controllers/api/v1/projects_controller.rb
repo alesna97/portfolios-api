@@ -54,6 +54,6 @@ class Api::V1::ProjectsController < ApplicationController
     def project_params
       params.permit(:name, :image, 
                     :description, :url, technology_ids: [],
-                    applications_attributes: [:name, :description, :url, :image])
+                    applications_attributes: [:name, :description, :url, :image, :id, :_destroy])
     end
 end
