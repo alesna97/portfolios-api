@@ -5,7 +5,7 @@ class Api::V1::ProjectsController < ApplicationController
   # GET /api/v1/projects
   def index
     search = Project.includes(:applications).ransack(params[:q]).result
-    projects = search.page(params[:page]).per(params[:per_page])
+    projects = search.order(created_at: :desc).page(params[:page]).per(params[:per_page])
 
     projects_serializer = ActiveModel::Serializer::CollectionSerializer.new(
       projects, serializer: ProjectSerializer

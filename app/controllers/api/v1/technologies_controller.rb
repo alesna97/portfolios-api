@@ -6,7 +6,7 @@ class Api::V1::TechnologiesController < ApplicationController
   # GET /api/v1/technologies
   def index
     search = Technology.ransack(params[:q]).result
-    technologies = search.page(params[:page]).per(params[:per_page])
+    technologies = search.order(created_at: :desc).page(params[:page]).per(params[:per_page])
 
     render json: { data: technologies,  pagination: json_serial(technologies)}
   end
