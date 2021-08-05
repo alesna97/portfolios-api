@@ -3,7 +3,7 @@ class Project < ApplicationRecord
   has_many :applications
   mount_uploader :image, ImageUploader
 
-  accepts_nested_attributes_for :applications
+  accepts_nested_attributes_for :applications, :allow_destroy => true
 
   validates :name, presence: true
 end
